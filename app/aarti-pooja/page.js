@@ -137,7 +137,7 @@ export default function AartiPoojaPage() {
               <div className="relative h-64">
                 <Image
                   src={service.image}
-                  alt={service.title}
+                  alt={language === 'hi' ? service.titleHi : service.titleEn}
                   fill
                   className="object-cover"
                   onError={(e) => {
@@ -148,19 +148,34 @@ export default function AartiPoojaPage() {
                 <div className="absolute top-4 right-4 bg-sandalwood text-ivory px-4 py-2 rounded-sm font-light shadow-sm">
                   ₹{service.price}
                 </div>
+                {service.isSpecialPuja && (
+                  <div className="absolute top-4 left-4 bg-amber-500 text-white px-3 py-1 rounded-sm text-xs font-medium">
+                    Special Event
+                  </div>
+                )}
+                {service.isGrandEvent && (
+                  <div className="absolute top-4 left-4 bg-purple-600 text-white px-3 py-1 rounded-sm text-xs font-medium">
+                    Grand Bhandara
+                  </div>
+                )}
                 <div className="absolute bottom-4 left-4 right-4">
                   <div className="bg-ivory/90 backdrop-blur-sm px-3 py-1 rounded-sm text-sm font-light text-incense mb-2">
                     {service.category}
                   </div>
+                  {service.specialDate && (
+                    <div className="bg-sandalwood/90 backdrop-blur-sm px-3 py-1 rounded-sm text-xs font-light text-ivory">
+                      📅 {service.specialDate || service.festival}
+                    </div>
+                  )}
                 </div>
               </div>
               
               <div className="p-6">
                 <h3 className="text-xl font-light text-deep-brown mb-2" style={{ fontFamily: language === 'hi' ? 'Noto Serif Devanagari, serif' : 'Cormorant Garamond, serif' }}>
-                  {service.title}
+                  {language === 'hi' ? service.titleHi : service.titleEn}
                 </h3>
                 <p className="text-incense font-light mb-4 line-clamp-2 text-sm">
-                  {service.description}
+                  {language === 'hi' ? service.descriptionHi : service.descriptionEn}
                 </p>
                 
                 <div className="flex items-center justify-between text-xs text-incense mb-4 font-light">
@@ -195,7 +210,7 @@ export default function AartiPoojaPage() {
             <div className="relative h-64">
               <Image
                 src={selectedService.image}
-                alt={selectedService.title}
+                alt={language === 'hi' ? selectedService.titleHi : selectedService.titleEn}
                 fill
                 className="object-cover"
                 onError={(e) => {
@@ -216,7 +231,7 @@ export default function AartiPoojaPage() {
             <div className="p-8">
               <div className="flex items-center justify-between mb-4 border-b border-sandalwood/10 pb-4">
                 <h2 className="text-3xl font-light text-deep-brown" style={{ fontFamily: language === 'hi' ? 'Noto Serif Devanagari, serif' : 'Cormorant Garamond, serif' }}>
-                  {selectedService.title}
+                  {language === 'hi' ? selectedService.titleHi : selectedService.titleEn}
                 </h2>
                 <div className="text-2xl font-light text-sandalwood">
                   ₹{selectedService.price}
@@ -224,8 +239,16 @@ export default function AartiPoojaPage() {
               </div>
 
               <p className="text-incense font-light mb-6 leading-relaxed">
-                {selectedService.description}
+                {language === 'hi' ? selectedService.descriptionHi : selectedService.descriptionEn}
               </p>
+
+              {selectedService.specialNote && (
+                <div className="bg-amber-50 border border-amber-200 p-4 rounded-sm mb-6">
+                  <p className="text-sm text-amber-900 font-light">
+                    <span className="font-medium">Note: </span>{selectedService.specialNote}
+                  </p>
+                </div>
+              )}
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 <div className="bg-sandalwood/5 p-4 rounded-sm border border-sandalwood/10">
