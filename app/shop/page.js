@@ -20,6 +20,17 @@ export default function Shop() {
     setShowModal(true);
   };
 
+  const handleOrderProduct = async (product) => {
+    try {
+      // For now, show a contact alert
+      // In production, integrate with payment gateway
+      alert(`To order ${product.titleEn}, please contact us:\nPhone: +91-XXXXXXXXXX\nEmail: temple@kuberji.org`);
+    } catch (error) {
+      console.error('Order error:', error);
+      alert('Failed to process order. Please try again.');
+    }
+  };
+
   return (
     <section className="bg-heritage-cream cursor-default select-none min-h-screen"> 
       <MyNav/>
@@ -123,6 +134,7 @@ export default function Shop() {
                       {language === 'hi' ? 'विवरण देखें' : 'View Details'}
                     </button>
                     <button 
+                      onClick={() => handleOrderProduct(product)}
                       disabled={!product.inStock}
                       className={`w-full px-4 py-2 rounded-sm font-light border transition-all duration-300 ${
                         product.inStock 
@@ -222,6 +234,7 @@ export default function Shop() {
 
               <div className="flex gap-3">
                 <button 
+                  onClick={() => handleOrderProduct(selectedProduct)}
                   disabled={!selectedProduct.inStock}
                   className={`flex-1 px-6 py-4 rounded-sm font-light transition-all duration-300 ${
                     selectedProduct.inStock

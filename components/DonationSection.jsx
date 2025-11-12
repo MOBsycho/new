@@ -1,8 +1,8 @@
 "use client";
-import { Button } from "@/components/ui/button";
 import { HandHeart } from "lucide-react";
 import { Card } from "./Card";
 import { motion } from "framer-motion";
+import DonationButton from "./payment/DonationButton";
 
 export const DonationSection = () => {
   const projects = [
@@ -92,12 +92,7 @@ export const DonationSection = () => {
               transition={{ duration: 0.5, delay: 0.7 }}
               viewport={{ once: true }}
             >
-              <Button 
-                className="spiritual-button bg-spiritual-gold hover:bg-gold-accent text-white font-semibold px-8 py-6 text-lg rounded-full shadow-lg"
-                data-button="donate"
-              >
-                Make a Donation
-              </Button>
+              <DonationButton />
             </motion.div>
           </motion.div>
         </div>
