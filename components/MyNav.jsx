@@ -55,7 +55,7 @@ export default function MyNav() {
       link: "/howtoreachus",
     },
     {
-      name: language === 'en' ? 'Services' : 'सेवाएं',
+      name: language === 'en' ? 'Services & Aarti' : 'सेवाएं और आरती',
       link: "/services",
     },
     {
@@ -65,10 +65,6 @@ export default function MyNav() {
     {
       name: t('nav.gallery'),
       link: "/media"
-    },
-    {
-      name: t('nav.aarti'),
-      link: "/aarti-pooja"
     },
     {
       name: t('nav.shop'),

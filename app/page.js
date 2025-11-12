@@ -86,7 +86,7 @@ export default function Home() {
               </p>
               
               <div className="flex flex-col sm:flex-row gap-2 sm:gap-3 pt-4">
-                <Link href="/aarti-pooja" className="w-full sm:w-auto">
+                <Link href="/services" className="w-full sm:w-auto">
                   <button className="w-full bg-sandalwood text-ivory px-6 sm:px-8 py-2.5 sm:py-3 rounded-sm font-light transition-all duration-300 hover:bg-deep-brown border border-sandalwood shadow-sm text-sm sm:text-base" style={{ fontFamily: language === 'hi' ? 'Noto Serif Devanagari, serif' : 'Cormorant Garamond, serif' }}>
                     {t('home.bookAarti')}
                   </button>
