@@ -69,7 +69,7 @@ export default function Contact() {
                       <h4 className="font-light text-deep-brown mb-1" style={{ fontFamily: language === 'hi' ? 'Noto Serif Devanagari, serif' : 'inherit' }}>
                         {language === 'hi' ? 'ईमेल' : 'Email'}
                       </h4>
-                      <p className="text-incense font-light">info@kuberjitemple.org</p>
+                      <p className="text-incense font-light">panwarkartik732@gmail.com</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
@@ -80,7 +80,8 @@ export default function Contact() {
                       <h4 className="font-light text-deep-brown mb-1" style={{ fontFamily: language === 'hi' ? 'Noto Serif Devanagari, serif' : 'inherit' }}>
                         {language === 'hi' ? 'फोन' : 'Phone'}
                       </h4>
-                      <p className="text-incense font-light">+91 12345 67890</p>
+                      <p className="text-incense font-light">+91 9412418725</p>
+                      <p className="text-incense font-light">+91 7579183761</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-4">
