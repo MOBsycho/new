@@ -24,6 +24,7 @@ export default function AdminDashboard() {
   const [editingContent, setEditingContent] = useState(null);
   const [contentFilter, setContentFilter] = useState('ALL');
 
+  // FIX: useCallback for verifyAuth
   const verifyAuth = useCallback(async () => {
     try {
       const response = await fetch('/api/admin/verify');
@@ -54,7 +55,7 @@ export default function AdminDashboard() {
     } else if (user && activeSection === 'content') {
       fetchContents();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeSection, user, contentFilter]);
 
   const fetchStats = async () => {
