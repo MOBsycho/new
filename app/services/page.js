@@ -1,21 +1,32 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import { motion } from 'framer-motion';
 import { useLanguage } from '@/contexts/LanguageContext';
 import { getTranslation } from '@/lib/translations';
+import { isAuthenticated } from '@/lib/auth';
 import LanguageSwitcher from '@/components/LanguageSwitcher';
 import MyNav from '@/components/MyNav';
 import Footer from '@/components/Footer';
 
 export default function ServicesPage() {
+  const router = useRouter();
   const { language } = useLanguage();
   const [services, setServices] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedCategory, setSelectedCategory] = useState('ALL');
+  const [cart, setCart] = useState([]);
   const t = (key) => getTranslation(language, key);
+
+  // Load cart from localStorage on mount
+  useEffect(() => {
+    const savedCart = localStorage.getItem('temple_cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
 
   const categories = [
     { value: 'ALL', labelEn: 'All Services', labelHi: 'सभी सेवाएं', icon: '🕉️' },
@@ -55,6 +66,38 @@ export default function ServicesPage() {
       currency: 'INR',
       minimumFractionDigits: 0,
     }).format(price);
+  };
+
+  const handleBookNow = (service) => {
+    // Check if user is logged in
+    if (!isAuthenticated()) {
+      // Redirect to login with return URL
+      router.push(`/auth/login?redirect=/services&serviceId=${service.id}`);
+      return;
+    }
+
+    // Add to cart
+    const cartItem = {
+      id: service.id,
+      type: 'service',
+      nameEn: service.nameEn,
+      nameHi: service.nameHi,
+      price: service.price,
+      duration: service.duration,
+      imageUrl: service.imageUrl,
+      category: service.category,
+      addedAt: new Date().toISOString()
+    };
+
+    const newCart = [...cart, cartItem];
+    setCart(newCart);
+    localStorage.setItem('temple_cart', JSON.stringify(newCart));
+
+    // Trigger cart update event
+    window.dispatchEvent(new Event('cartUpdated'));
+
+    // Redirect to cart
+    router.push('/cart');
   };
 
   return (
@@ -231,13 +274,13 @@ export default function ServicesPage() {
                   </div>
 
                   {/* Book Now Button */}
-                  <Link
-                    href={`/book-service?serviceId=${service.id}`}
+                  <button
+                    onClick={() => handleBookNow(service)}
                     className="block w-full px-6 py-3 bg-sandalwood text-ivory text-center rounded-sm font-light hover:bg-deep-brown transition-all duration-300 border border-sandalwood shadow-sm"
                     style={{ fontFamily: language === 'hi' ? 'Noto Serif Devanagari, serif' : 'Cormorant Garamond, serif' }}
                   >
-                    {language === 'hi' ? 'अभी बुक करें' : 'Book Now'}
-                  </Link>
+                    {language === 'hi' ? 'कार्ट में जोड़ें' : 'Add to Cart'}
+                  </button>
                 </div>
               </motion.div>
             ))}

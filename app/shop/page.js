@@ -3,17 +3,29 @@ import Footer from '@/components/Footer';
 import { motion } from "framer-motion";
 import MyNav from '@/components/MyNav';
 import Image from 'next/image';
+import { useRouter } from 'next/navigation';
 import { useLanguage } from "@/contexts/LanguageContext";
 import { getTranslation } from "@/lib/translations";
+import { isAuthenticated } from '@/lib/auth';
 import LanguageSwitcher from "@/components/LanguageSwitcher";
 import { SHOP_PRODUCTS } from "@/lib/aarti-data";
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 export default function Shop() {
+  const router = useRouter();
   const { language } = useLanguage();
   const t = (key) => getTranslation(language, key);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [showModal, setShowModal] = useState(false);
+  const [cart, setCart] = useState([]);
+
+  // Load cart from localStorage
+  useEffect(() => {
+    const savedCart = localStorage.getItem('temple_cart');
+    if (savedCart) {
+      setCart(JSON.parse(savedCart));
+    }
+  }, []);
 
   const handleViewDetails = (product) => {
     setSelectedProduct(product);
@@ -22,12 +34,36 @@ export default function Shop() {
 
   const handleOrderProduct = async (product) => {
     try {
-      // For now, show a contact alert
-      // In production, integrate with payment gateway
-      alert(`To order ${product.titleEn}, please contact us:\nPhone: +91-XXXXXXXXXX\nEmail: temple@kuberji.org`);
+      // Check if user is logged in
+      if (!isAuthenticated()) {
+        router.push(`/auth/login?redirect=/shop&productId=${product.id}`);
+        return;
+      }
+
+      // Add to cart
+      const cartItem = {
+        id: product.id,
+        type: 'product',
+        nameEn: product.titleEn,
+        nameHi: product.titleHi,
+        price: product.price,
+        imageUrl: product.image,
+        category: product.category,
+        addedAt: new Date().toISOString()
+      };
+
+      const newCart = [...cart, cartItem];
+      setCart(newCart);
+      localStorage.setItem('temple_cart', JSON.stringify(newCart));
+
+      // Trigger cart update event
+      window.dispatchEvent(new Event('cartUpdated'));
+
+      // Redirect to cart
+      router.push('/cart');
     } catch (error) {
       console.error('Order error:', error);
-      alert('Failed to process order. Please try again.');
+      alert('Failed to add to cart. Please try again.');
     }
   };
 
@@ -143,7 +179,7 @@ export default function Shop() {
                       }`}
                       style={{ fontFamily: language === 'hi' ? 'Noto Serif Devanagari, serif' : 'inherit' }}
                     >
-                      {language === 'hi' ? 'संपर्क करें' : 'Contact to Order'}
+                      {language === 'hi' ? 'कार्ट में जोड़ें' : 'Add to Cart'}
                     </button>
                   </div>
                 </div>
@@ -234,7 +270,10 @@ export default function Shop() {
 
               <div className="flex gap-3">
                 <button 
-                  onClick={() => handleOrderProduct(selectedProduct)}
+                  onClick={() => {
+                    handleOrderProduct(selectedProduct);
+                    setShowModal(false);
+                  }}
                   disabled={!selectedProduct.inStock}
                   className={`flex-1 px-6 py-4 rounded-sm font-light transition-all duration-300 ${
                     selectedProduct.inStock
@@ -243,7 +282,7 @@ export default function Shop() {
                   }`}
                   style={{ fontFamily: language === 'hi' ? 'Noto Serif Devanagari, serif' : 'Cormorant Garamond, serif' }}
                 >
-                  {language === 'hi' ? 'अभी ऑर्डर करें' : 'Order Now'}
+                  {language === 'hi' ? 'कार्ट में जोड़ें' : 'Add to Cart'}
                 </button>
                 <button
                   onClick={() => setShowModal(false)}
