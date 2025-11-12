@@ -188,3 +188,34 @@ model Setting {
   
   @@map("settings")
 }
+
+// Content Model (for dynamic website content)
+model Content {
+  id            String    @id @default(uuid())
+  type          ContentType
+  titleEn       String
+  titleHi       String?
+  descriptionEn String    @db.Text
+  descriptionHi String?   @db.Text
+  imageUrl      String?
+  price         Float?
+  category      String?
+  isActive      Boolean   @default(true)
+  order         Int       @default(0)
+  metadata      Json?     // For storing additional flexible data
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  
+  @@index([type])
+  @@index([isActive])
+  @@map("contents")
+}
+
+enum ContentType {
+  SERVICE_CARD
+  DONATION_PROJECT
+  SHOP_PRODUCT
+  EVENT
+  GALLERY_IMAGE
+  ANNOUNCEMENT
+}
