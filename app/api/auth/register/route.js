@@ -3,6 +3,7 @@ import { z } from 'zod';
 import prisma from '@/lib/prisma';
 import { hashPassword } from '@/lib/password';
 import { generateAccessToken, generateRefreshToken } from '@/lib/jwt';
+import { sendWelcomeEmail } from '@/lib/email';
 
 // Validation schema
 const registerSchema = z.object({
@@ -102,6 +103,11 @@ export async function POST(request) {
       sameSite: 'lax',
       maxAge: 60 * 60 * 24 * 30, // 30 days
     });
+
+    // Send welcome email (non-blocking)
+    sendWelcomeEmail(user).catch(err => 
+      console.error('Failed to send welcome email:', err)
+    );
 
     return response;
   } catch (error) {
