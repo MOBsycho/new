@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -37,11 +37,7 @@ export default function ServicesPage() {
     { value: 'SEVA', labelEn: 'Seva', labelHi: 'सेवा', icon: '💐' },
   ];
 
-  useEffect(() => {
-    fetchServices();
-  }, [selectedCategory]);
-
-  const fetchServices = async () => {
+  const fetchServices = useCallback(async () => {
     try {
       setLoading(true);
       const url = selectedCategory === 'ALL' 
@@ -72,7 +68,11 @@ export default function ServicesPage() {
     } finally {
       setLoading(false);
     }
-  };
+  }, [selectedCategory]);
+
+  useEffect(() => {
+    fetchServices();
+  }, [fetchServices]);
 
   const formatPrice = (price) => {
     return new Intl.NumberFormat('en-IN', {
