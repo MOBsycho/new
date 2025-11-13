@@ -171,8 +171,9 @@ export default function CheckoutPage() {
   const hasServices = cart.some(item => item.type === 'service');
 
   return (
-     <Script src="https://checkout.razorpay.com/v1/checkout.js" />
+     
     <div className="min-h-screen bg-heritage-cream">
+    <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <MyNav />
 
       {/* Header */}
