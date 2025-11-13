@@ -90,17 +90,6 @@ export default function CheckoutPage() {
           throw new Error(orderData.error || 'Failed to create order');
         }
 
-        // Load Razorpay
-        if (!window.Razorpay) {
-          const script = document.createElement('script');
-          script.src = 'https://checkout.razorpay.com/v1/checkout.js';
-          script.async = true;
-          document.body.appendChild(script);
-          await new Promise((resolve, reject) => {
-            script.onload = resolve;
-            script.onerror = reject;
-          });
-        }
 
         const options = {
           key: orderData.razorpayKeyId,
@@ -181,6 +170,7 @@ export default function CheckoutPage() {
   const hasServices = cart.some(item => item.type === 'service');
 
   return (
+     <Script src="https://checkout.razorpay.com/v1/checkout.js" />
     <div className="min-h-screen bg-heritage-cream">
       <MyNav />
 
