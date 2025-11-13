@@ -4,6 +4,7 @@ import { prisma } from '@/lib/prisma';
 import { verifyAuth } from '@/lib/middleware/auth';
 import { verifyPaymentSignature, fetchPaymentDetails, generateReceiptNumber } from '@/lib/razorpay';
 import { generateReceiptPDF } from '@/lib/pdf-generator';
+import { sendBookingConfirmation, sendPaymentReceipt } from '@/lib/email';
 import { z } from 'zod';
 import fs from 'fs/promises';
 import path from 'path';
@@ -187,6 +188,14 @@ export async function POST(request) {
         where: { id: payment.id },
         data: { receiptUrl },
       });
+
+      // Send confirmation emails (non-blocking)
+      sendBookingConfirmation(booking.user, booking, booking.service).catch(err =>
+        console.error('Failed to send booking confirmation:', err)
+      );
+      sendPaymentReceipt(booking.user, { ...payment, receiptUrl }, booking, booking.service).catch(err =>
+        console.error('Failed to send payment receipt:', err)
+      );
 
       return NextResponse.json({
         success: true,
